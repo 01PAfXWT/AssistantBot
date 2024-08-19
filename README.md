@@ -7,7 +7,7 @@
 * **Archive Management:** The ability to save chat sessions or completions and manage the archived data.
 
 # Installation
-
+python>=3.10 is required.
 ```
 git clone
 cd AssistantBot

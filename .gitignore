@@ -1,0 +1,6 @@
+__pycache__/
+.idea/
+*.toml
+!locales/*.toml
+*.json
+*.zip

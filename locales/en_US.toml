@@ -92,7 +92,7 @@ refresh_interval_notice = "Set the page refresh interval in seconds."
 refresh_interval_set_to = "Refresh interval set to: {refresh_interval} seconds."
 refresh_interval_updated = "Refresh interval updated."
 
-proxy_setting_notice = "Set up a proxy server. Default is local proxy, http: `http://127.0.0.1:10809`, https: `http://127.0.0.1:10809`."
+proxy_setting_notice = "Set up a proxy server [http or socks]. Default is local proxy, http: `socks5://127.0.0.1:10808`, https: `socks5://127.0.0.1:10808`."
 http_proxy = "HTTP Proxy"
 https_proxy = "HTTPS Proxy"
 proxy_test_description = "Test the HTTP and HTTPS proxy settings by connecting to Google.com."

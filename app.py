@@ -30,7 +30,7 @@ def main():
         check_requirements_result, check_requirements_message = check_requirements('requirements.txt')
         if not check_requirements_result:
             st.error(check_requirements_message, icon="🚨")
-            st.stop()
+            # st.stop()
 
         with st.sidebar:
             st.title(project_name)

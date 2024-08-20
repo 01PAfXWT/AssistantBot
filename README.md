@@ -28,7 +28,7 @@ Choose a function page from the list on the sidebar and follow the instructions 
 
 # Configuration
 
-The app's configurations are stored in TOML files. There are two key files: `AssistantBot\configs.toml` and `AssistantBot\data\LLMs_configs.toml`. These two files will be created at during the app's first run.
+The app's configurations are stored in TOML files. There are two key files: `AssistantBot\configs.toml` and `AssistantBot\data\LLMs_configs.toml`. These two files will be created during the app's first run.
 
 > **Note**: Do not directly modify these toml files, using the  `Settings` to adjust options instread.
 

@@ -92,7 +92,7 @@ refresh_interval_notice = "设置页面刷新间隔时间，单位为秒。"
 refresh_interval_set_to = "刷新间隔时间设置为：{refresh_interval}秒。"
 refresh_interval_updated = "刷新间隔时间已更新。"
 
-proxy_setting_notice = "设置代理服务器。默认为本机代理http：`http://127.0.0.1:10809`, https：`http://127.0.0.1:10809`。"
+proxy_setting_notice = "设置代理服务器[http或socks]。默认为本机代理http：`socks5://127.0.0.1:10808`, https：`socks5://127.0.0.1:10808`。"
 http_proxy = "HTTP代理"
 https_proxy = "HTTPS代理"
 proxy_test_description = "通过连接Google.com测试代理是否可用。"

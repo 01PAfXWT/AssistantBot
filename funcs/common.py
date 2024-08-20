@@ -14,7 +14,7 @@ import zipfile
 from contextlib import closing
 from datetime import datetime
 
-import requests
+import httpx
 import tomlkit
 from send2trash import send2trash
 
@@ -132,6 +132,11 @@ def check_requirements(requirements_file):
 
     with open(requirements_file, 'r') as file:
         for line in file:
+            # 处理行中的注释或空行
+            line = line.split('#')[0].strip()
+            if not line:
+                continue
+
             if '==' in line:
                 package, version = line.split('==')
             elif '>=' in line:
@@ -139,29 +144,32 @@ def check_requirements(requirements_file):
             else:
                 package = line
                 version = None
+
             package = package.strip()
             if version:
                 version = version.strip()
 
-            if importlib.util.find_spec(package) is None:
+            package_name = package.split('[')[0]
+
+            if importlib.util.find_spec(package_name) is None:
                 not_installed_packages.append(package)
             else:
                 try:
-                    installed_version = importlib.metadata.version(package)
-                    if version and not importlib.metadata.version(
-                            package) >= version:
+                    installed_version = importlib.metadata.version(
+                        package_name)
+                    if version and installed_version < version:
                         version_mismatched_packages.append(
-                            f"{package} (installed: {installed_version}, required: >= {version})")
+                            f"{package_name} (installed: {installed_version}, required: >= {version})")
                 except importlib.metadata.PackageNotFoundError:
                     not_installed_packages.append(package)
 
     if not_installed_packages or version_mismatched_packages:
         error_message = "The following packages are not installed or have version mismatches:\n"
         if not_installed_packages:
-            error_message += "Packages not installed:" + \
+            error_message += "Packages not installed: " + \
                              ', '.join(not_installed_packages) + "\n"
         if version_mismatched_packages:
-            error_message += "	Packages with version mismatches: " + \
+            error_message += "Packages with version mismatches: " + \
                              ', '.join(version_mismatched_packages) + "\n"
         return False, error_message
     else:
@@ -243,8 +251,8 @@ def create_project_configs_toml(toml_path):
             'add_common_request_parameters_to_new_model': True,
             'verbose_mode': False,
             'proxy': {
-                'http_proxy': 'http://127.0.0.1:10809',
-                'https_proxy': 'http://127.0.0.1:10809',
+                'http_proxy': 'socks5://127.0.0.1:10808',
+                'https_proxy': 'socks5://127.0.0.1:10808',
             },
             'customized_request_parameters': {
                 'new_boolean_param': {
@@ -576,16 +584,21 @@ def validate_file_name_pattern(pattern: str) -> bool:
 def validate_proxy(http_proxy, https_proxy):
     url1 = 'http://www.google.com'
     url2 = 'https://www.google.com'
+
+    proxies = {
+        "http://": http_proxy,
+        "https://": https_proxy,
+    }
+
     try:
-        http_response = requests.get(
-            url1, proxies={
-                "http": http_proxy}, timeout=10)
-        http_valid = http_response.status_code == 200
-        https_response = requests.get(
-            url2, proxies={
-                "https": https_proxy}, timeout=10)
-        https_valid = https_response.status_code == 200
+        with httpx.Client(proxies=proxies, timeout=10) as client:
+            http_response = client.get(url1)
+            http_valid = http_response.status_code == 200
+
+            https_response = client.get(url2)
+            https_valid = https_response.status_code == 200
+
         return http_valid, https_valid
-    except requests.RequestException as e:
-        print(e)
+    except Exception as e:
+        print_to_console(e, get_current_function_name())
         return False, False
